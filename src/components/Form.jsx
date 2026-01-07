@@ -5,6 +5,7 @@ function Form() {
   let {
     handleSubmit,
     register,
+    watch,
     formState: { errors },
   } = useForm();
 
@@ -52,11 +53,17 @@ function Form() {
             type="password"
             className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
             placeholder="Enter Password"
-            {...register("password", { required: true })}
+            {...register("password", {
+              required: "* Password is required",
+              minLength: {
+                value: 6,
+                message: "* Password must be at least 6 characters",
+              },
+            })}
           />
           <span className="w-40 text-sm whitespace-nowrap">
             {errors.password && (
-              <span className="text-red-500">* This field is required</span>
+              <span className="text-red-500">{errors.password.message}</span>
             )}
           </span>
         </div>
@@ -68,11 +75,15 @@ function Form() {
             type="password"
             className="bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand block w-full px-3 py-2.5 shadow-xs placeholder:text-body"
             placeholder="ReEnter Password"
-            {...register("repassword", { required: true })}
+            {...register("repassword", {
+              required: "* Please re-enter your password",
+              validate: (value) =>
+                value === watch("password") || "* Password do not match",
+            })}
           />
           <span className="w-40 text-sm whitespace-nowrap">
             {errors.repassword && (
-              <span className="text-red-500">* This field is required</span>
+              <span className="text-red-500">{errors.repassword.message}</span>
             )}
           </span>
         </div>
